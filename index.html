@@ -47,10 +47,9 @@
             
             MP.api.segment('Cancel Sub', dateRange).done(function(results2) {
               var dateSeries2 = generateSortedDateSeries(results2.json['Cancel Sub']);
-              console.log(dateSeries2);
             });
             
-            calculateSums(chartData, dateSeries, dateSeries2, results, results2);
+            calculateSums(chartData, dateSeries, results, results2);
             eventGraph.MPChart('setData', chartData);
           });
           
@@ -64,7 +63,8 @@
             return series.sort();
           }
 
-          function calculateSums(data, dateSeries, dateSeries2, apiResults, apiResults2) {
+          function calculateSums(data, dateSeries, apiResults, apiResults2) {
+            console.log(apiResults);
             var sum = 0;
             dateSeries.forEach(function(date) {
               sum = sum + apiResults.json[selectedEvent][date];

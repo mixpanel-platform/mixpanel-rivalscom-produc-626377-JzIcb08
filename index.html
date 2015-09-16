@@ -58,7 +58,7 @@
             return series.sort();
           }
 
-          function calculateSums(dateSeries, apiResults, apiResults2) {
+          function calculateSums(data, dateSeries, apiResults, apiResults2) {
             var sum = 0;
             dateSeries.forEach(function(date) {
               sum = sum + apiResults.json['Sub Success'][date] - apiResults2.json['Cancel Sub'][date];

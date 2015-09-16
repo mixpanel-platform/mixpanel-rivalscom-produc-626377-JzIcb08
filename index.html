@@ -25,20 +25,17 @@
     <script>
       MP.api.ready(runReport);
       function runReport() {
-        var eventSelector = $('#eventSelect').MPEventSelect();
-        var propSelector  = $('#propSelect').MPPropertySelect();
         var dateSelector  = $('#dateSelect').MPDatepicker();
         var eventGraph    = $('#graph').MPChart({chartType: 'line'});
         var eventTable    = $('#table').MPTable({
           showPercentages: true,
           firstColHeader: 'Event'
         });
-        var selectedEvent;
 
         function runQuery() {
           var dateRange  = dateSelector.MPDatepicker('value');
           var chartData = {};
-          chartData['Sub Success'] = {};
+          chartData['Sub Success - Cancel Sub'] = {};
           
           MP.api.segment('Sub Success', undefined, dateRange).done(function(results) {
             // Need a sorted date Array in order to calculate a rolling sum
@@ -47,10 +44,10 @@
             
             MP.api.segment('Cancel Sub', dateRange).done(function(results2) {
               var dateSeries2 = generateSortedDateSeries(results2.json['Cancel Sub']);
+              calculateSums(chartData, dateSeries, results, results2);
+              eventGraph.MPChart('setData', chartData);
             });
             
-            calculateSums(chartData, dateSeries, results, results2);
-            eventGraph.MPChart('setData', chartData);
           });
           
 
@@ -67,16 +64,13 @@
             console.log(apiResults);
             var sum = 0;
             dateSeries.forEach(function(date) {
-              sum = sum + apiResults.json[selectedEvent][date];
-              chartData[selectedEvent][date] = sum;
+              sum = sum + apiResults.json['Sub Success'][date] - apiResults2.json['Cancel Sub'][date];
+              chartData['Sub Success - Cancel Sub'][date] = sum;
             });
           }
         }
         
-        eventSelector.on('change', function(e, selectedEventName) {
-          selectedEvent = selectedEventName;
-          runQuery();
-        });
+        runQuery();
         dateSelector.on('change', runQuery);
       }
     </script>

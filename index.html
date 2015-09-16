@@ -40,10 +40,8 @@
           MP.api.segment('Sub Success', undefined, dateRange).done(function(results) {
             // Need a sorted date Array in order to calculate a rolling sum
             var dateSeries = generateSortedDateSeries(results.json['Sub Success']);
-            console.log(dateSeries);
-            
+
             MP.api.segment('Cancel Sub', dateRange).done(function(results2) {
-              var dateSeries2 = generateSortedDateSeries(results2.json['Cancel Sub']);
               calculateSums(chartData, dateSeries, results, results2);
               eventGraph.MPChart('setData', chartData);
             });
@@ -60,7 +58,7 @@
             return series.sort();
           }
 
-          function calculateSums(data, dateSeries, apiResults, apiResults2) {
+          function calculateSums(dateSeries, apiResults, apiResults2) {
             console.log(apiResults);
             var sum = 0;
             dateSeries.forEach(function(date) {

@@ -59,7 +59,6 @@
           }
 
           function calculateSums(dateSeries, apiResults, apiResults2) {
-            console.log(apiResults);
             var sum = 0;
             dateSeries.forEach(function(date) {
               sum = sum + apiResults.json['Sub Success'][date] - apiResults2.json['Cancel Sub'][date];

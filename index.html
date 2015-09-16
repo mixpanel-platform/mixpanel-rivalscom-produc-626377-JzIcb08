@@ -42,7 +42,7 @@
             var dateSeries = generateSortedDateSeries(results.json['Sub Success']);
 
             MP.api.segment('Cancel Sub', dateRange).done(function(results2) {
-              calculateSums(chartData, dateSeries, results, results2);
+              calculateSums(dateSeries, results, results2);
               eventGraph.MPChart('setData', chartData);
             });
             
@@ -58,7 +58,7 @@
             return series.sort();
           }
 
-          function calculateSums(data, dateSeries, apiResults, apiResults2) {
+          function calculateSums(dateSeries, apiResults, apiResults2) {
             var sum = 0;
             dateSeries.forEach(function(date) {
               sum = sum + apiResults.json['Sub Success'][date] - apiResults2.json['Cancel Sub'][date];

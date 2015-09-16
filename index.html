@@ -38,15 +38,23 @@
         function runQuery() {
           var dateRange  = dateSelector.MPDatepicker('value');
           var chartData = {};
-          chartData[selectedEvent] = {};
+          chartData['Sub Success'] = {};
           
-          MP.api.segment(selectedEvent, undefined, dateRange).done(function(results) {
+          MP.api.segment('Sub Success', undefined, dateRange).done(function(results) {
             // Need a sorted date Array in order to calculate a rolling sum
-            var dateSeries = generateSortedDateSeries(results.json[selectedEvent]);
-
-            calculateSums(chartData, dateSeries, results);
+            var dateSeries = generateSortedDateSeries(results.json['Sub Success']);
+            console.log(dateSeries);
+            
+            MP.api.segment('Cancel Sub', dateRange).done(function(results2) {
+              var dateSeries2 = generateSortedDateSeries(results2.json['Cancel Sub']);
+              console.log(dateSeries2);
+            });
+            
+            calculateSums(chartData, dateSeries, dateSeries2, results, results2);
             eventGraph.MPChart('setData', chartData);
           });
+          
+
 
           function generateSortedDateSeries(dateCollection) {
             var series = [];
@@ -56,7 +64,7 @@
             return series.sort();
           }
 
-          function calculateSums(data, dateSeries, apiResults) {
+          function calculateSums(data, dateSeries, dateSeries2, apiResults, apiResults2) {
             var sum = 0;
             dateSeries.forEach(function(date) {
               sum = sum + apiResults.json[selectedEvent][date];
